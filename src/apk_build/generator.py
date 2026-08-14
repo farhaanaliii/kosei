@@ -28,7 +28,7 @@ def create_project(path: Path, app_name: str, package_name: str) -> bool:
     replace_placeholder(project_folder / "AndroidManifest.xml", "{package_name}", package_name)
     replace_placeholder(project_folder / "res" / "values" / "strings.xml", "{app_name}", app_name)
     replace_placeholder(target_dir / "Applications.java", "{package_name}", package_name)
-    replace_placeholder(target_dir / "CrashActivity.Java", "{package_name}", package_name)
+    replace_placeholder(target_dir / "CrashActivity.java", "{package_name}", package_name)
     replace_placeholder(target_dir / "MainActivity.java", "{package_name}", package_name)
     
     print(f"[*] App project '{app_name}' created!")
