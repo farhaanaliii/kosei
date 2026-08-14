@@ -1,21 +1,28 @@
+import argparse
 from pathlib import Path
 
+from .project import Project
 from . import aapt
 from . import dalvikvm
-from . import utils
 
 
 
 def main() -> None:
-	project_folder = Path("/data/data/com.termux/files/home/apk")
+	parser = argparse.ArgumentParser()
 	
-	utils.ensure_dirs()
-	aapt.compile_resources(project_folder)
-	dalvikvm.compile_java(project_folder)
-	dalvikvm.compile_classes(project_folder)
-	aapt.build_apk(project_folder)
-	aapt.append_classes(project_folder)
-	dalvikvm.sign_apk(project_folder)
+	parser.add_argument("project", type=Path, help="Project directory")
+	
+	args = parser.parse_args()
+	
+	project = Project(args.project.resolve())
+	print(f"[*] building '{project.app_name}'")
+	
+	aapt.compile_resources(project)
+	dalvikvm.compile_java(project)
+	dalvikvm.compile_classes(project)
+	aapt.build_apk(project)
+	aapt.append_classes(project)
+	dalvikvm.sign_apk(project)
 
 
 	

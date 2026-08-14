@@ -1,22 +1,23 @@
 import subprocess
 from pathlib import Path
 
-from apk_build.constants import *
+from apk_build.project import Project
+from apk_build.constants import DATA
 
 
 
 #aapt package -m -J gen -M AndroidManifest.xml -S res -I android.jar
 
-def compile_resources(project_folder: Path) -> bool:
+def compile_resources(project: Project) -> bool:
 	print("[*] compiling resources")
 	
 	res = subprocess.run([
 		"aapt",
 		"package",
 		"-m",
-		"-J", GENERATED,
-		"-M", project_folder / "AndroidManifest.xml",
-		"-S", project_folder / "res",
+		"-J", project.generated,
+		"-M", project.manifest,
+		"-S", project.res,
 		"-I", DATA / "android.jar"
 	], capture_output=True, text=True)
 	
@@ -32,7 +33,7 @@ def compile_resources(project_folder: Path) -> bool:
 ./aapt package -f -I android.jar -S res -M AndroidManifest.xml -F hello.apk --no-version-vectors
 """
 
-def build_apk(project_folder: Path) -> bool:
+def build_apk(project: Project) -> bool:
 	print("[*] building resources")
 	
 	res = subprocess.run([
@@ -40,9 +41,9 @@ def build_apk(project_folder: Path) -> bool:
 		"package",
 		"-f",
 		"-I", DATA / "android.jar",
-		"-S", project_folder / "res",
-		"-M", project_folder / "AndroidManifest.xml",
-		"-F", project_folder / "hello.apk",
+		"-S", project.res,
+		"-M", project.manifest,
+		"-F", project.path / f"{project.app_name}.apk",
 		"--no-version-vectors"
 	], capture_output=True, text=True)
 	
@@ -59,15 +60,15 @@ def build_apk(project_folder: Path) -> bool:
 aapt add -f ../hello.apk classes.dex
 """
 
-def append_classes(project_folder: Path) -> bool:
+def append_classes(project: Project) -> bool:
 	print("[*] appending classes")
 	
 	res = subprocess.run([
 		"aapt",
 		"add",
 		"-f",
-		project_folder / "hello.apk",
-		BIN / "classes.dex"
+		project.path / f"{project.app_name}.apk",
+		project.bin / "classes.dex"
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
