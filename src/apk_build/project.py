@@ -17,6 +17,10 @@ class Project:
 	def _init_app(self):
 		self.app_name = self.get_string("app_name")
 		self.package_name = self._manifest_root.get("package")
+		
+		uses_sdk = self._manifest_root.find("uses-sdk")
+		self.min_api = uses_sdk.get("{http://schemas.android.com/apk/res/android}minSdkVersion")
+		
 		self.apk = self.build / f"{self.app_name}.apk"
 		self.signed_apk = self.path / f"{self.app_name}.apk"
 	

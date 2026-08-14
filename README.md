@@ -6,7 +6,7 @@ A simple Python tool to compile, build, and sign Android APKs natively on Androi
 
 - **Resource Compilation**: Compiles Android XML resources with `aapt`.
 - **Java Compilation**: Compiles Java code using Eclipse Compiler for Java (`ecj.jar`) via `dalvikvm`.
-- **Dexing**: Converts `.class` files to `classes.dex` using `dx.dex`.
+- **Dexing**: Converts `.class` files to `classes.dex` using the modern `d8.jar` (with Java 8 desugaring).
 - **Packaging & Signing**: Packages the APK and signs it using `apksigner.dex` with `test.jks`.
 
 ## Project Structure
@@ -27,14 +27,14 @@ my-project/
 
 - **Python**: `>= 3.14` (or managed via [`uv`](https://github.com/astral-sh/uv))
 - **Environment**: Android/Termux with `aapt` in system `PATH` and Dalvik VM at `/apex/com.android.art/bin/dalvikvm`.
-- **Data Dependencies**: Bundled in `./data/` (`android.jar`, `android.classes.jar`, `ecj.jar`, `dx.dex`, `apksigner.dex`, `test.jks`).
+- **Data Dependencies**: Bundled in `./data/` (`android.jar`, `android.classes.jar`, `ecj.jar`, `d8.jar`, `apksigner.dex`, `test.jks`).
 
 ## Compatibility & API Support
 
 Based on the build pipeline (`ecj` with `-7` flag and legacy `dx.dex`), the compiled APKs have specific API constraints:
 
-- **Minimum Recommended API:** **19 (Android 4.4 KitKat)**. Dalvik only fully supported Java 7 bytecode (like `try-with-resources`) starting in API 19. Since this tool uses legacy dexing without modern desugaring, running the APKs on anything older may cause `VerifyError` crashes.
-- **Java Language Support:** Java 7 (due to the `-7` flag in `ecj`).
+- **Minimum Recommended API:** **21 (Android 5.0 Lollipop)**. With the D8 compiler upgrade, this pipeline fully supports modern Java 8 features (like lambdas) through desugaring, targeting API 21 by default.
+- **Java Language Support:** Java 8 (using the `-8` flag in `ecj` and desugared by `d8`).
 - **Templates:** The provided `templates/default` defaults to `minSdkVersion="21"` and `targetSdkVersion="33"`. It is set up with modern Android 12+ requirements (like explicit `android:exported` flags on activities) to ensure seamless installation on modern devices.
 
 ## Usage
