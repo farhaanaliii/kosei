@@ -17,8 +17,8 @@ class Project:
 	def _init_app(self):
 		self.app_name = self.get_string("app_name")
 		self.package_name = self._manifest_root.get("package")
-		self.apk = self.path / f"{self.app_name}.apk"
-		self.signed_apk = self.path / f"{self.app_name}_signed.apk"
+		self.apk = self.build / f"{self.app_name}.apk"
+		self.signed_apk = self.path / f"{self.app_name}.apk"
 	
 	def get_string(self, name: str) -> str | None:
 		element = self._strings_root.find(f"./string[@name='{name}']")
