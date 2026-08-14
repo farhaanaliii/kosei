@@ -22,6 +22,7 @@ def create_project(path: Path, app_name: str, package_name: str) -> bool:
 
     packge_dir = project_folder / "src" / "package"
     target_dir = project_folder / "src" / Path(*package_name.split("."))
+    target_dir.parent.mkdir(parents=True, exist_ok=True)
     shutil.move(packge_dir, target_dir)    
     
     replace_placeholder(project_folder / "AndroidManifest.xml", "{package_name}", package_name)
