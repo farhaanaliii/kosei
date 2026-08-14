@@ -17,6 +17,8 @@ class Project:
 	def _init_app(self):
 		self.app_name = self.get_string("app_name")
 		self.package_name = self._manifest_root.get("package")
+		self.apk = self.path / f"{self.app_name}.apk"
+		self.signed_apk = self.path / f"{self.app_name}_signed.apk"
 	
 	def get_string(self, name: str) -> str | None:
 		element = self._strings_root.find(f"./string[@name='{name}']")
@@ -27,11 +29,12 @@ class Project:
 		self.temp = self.build / "temp"
 		self.generated = self.build / "generated"
 		self.bin = self.build / "bin"
+		self.compiled = self.build / "compiled"
 		self.manifest = self.path / "AndroidManifest.xml"
 		self.res = self.path / "res"
 		self.src = self.path / "src"
 		
-		for path in (self.build, self.temp, self.generated, self.bin):
+		for path in (self.build, self.temp, self.generated, self.bin, self.compiled):
 			path.mkdir(exist_ok=True)
 	
 

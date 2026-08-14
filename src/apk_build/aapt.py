@@ -6,19 +6,14 @@ from apk_build.constants import DATA
 
 
 
-#aapt package -m -J gen -M AndroidManifest.xml -S res -I android.jar
-
 def compile_resources(project: Project) -> bool:
 	print("[*] compiling resources")
 	
 	res = subprocess.run([
-		"aapt",
-		"package",
-		"-m",
-		"-J", project.generated,
-		"-M", project.manifest,
-		"-S", project.res,
-		"-I", DATA / "android.jar"
+		"aapt2",
+		"compile",
+		"--dir", project.res,
+		"-o", project.compiled
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
@@ -29,36 +24,31 @@ def compile_resources(project: Project) -> bool:
 		print(res.stderr)
 		return False
 	
-"""
-./aapt package -f -I android.jar -S res -M AndroidManifest.xml -F hello.apk --no-version-vectors
-"""
 
-def build_apk(project: Project) -> bool:
-	print("[*] building resources")
+def link_resources(project: Project) -> bool:
+	print("[*] linking resources")
+	
+	flats = sorted(project.compiled.rglob("*.flat"))
 	
 	res = subprocess.run([
-		"aapt",
-		"package",
-		"-f",
+		"aapt2",
+		"link",
 		"-I", DATA / "android.jar",
-		"-S", project.res,
-		"-M", project.manifest,
-		"-F", project.path / f"{project.app_name}.apk",
-		"--no-version-vectors"
+		"--manifest", project.manifest,
+		"--java", project.generated,
+		"-o", project.apk,
+		*flats
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
-		print("[*] apk built successfully!")
+		print("[*] resources linked successfully!")
 		return True
 	else:
-		print("[*] apk building failed!")
+		print("[*] resource linking failed!")
 		print(res.stderr)
 		return False
 
 
-"""
-aapt add -f ../hello.apk classes.dex
-"""
 
 def append_classes(project: Project) -> bool:
 	print("[*] appending classes")
@@ -67,7 +57,7 @@ def append_classes(project: Project) -> bool:
 		"aapt",
 		"add",
 		"-f",
-		project.path / f"{project.app_name}.apk",
+		project.apk,
 		project.bin / "classes.dex"
 	], capture_output=True, text=True)
 	
