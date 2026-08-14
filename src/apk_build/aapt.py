@@ -58,8 +58,8 @@ def append_classes(project: Project) -> bool:
 		"add",
 		"-f",
 		project.apk,
-		project.bin / "classes.dex"
-	], capture_output=True, text=True)
+		"classes.dex"
+	], capture_output=True, text=True, cwd=project.bin)
 	
 	if res.returncode == 0:
 		print("[*] appending classes successfully!")
