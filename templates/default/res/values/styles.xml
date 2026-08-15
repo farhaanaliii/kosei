@@ -8,6 +8,16 @@
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
+    </style>
+
+    <style name="AppTheme.ActionBar" parent="@android:style/Widget.Material.Light.ActionBar.Solid">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.Title</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.Title" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="@android:style/Theme.Material.Light.NoActionBar">
