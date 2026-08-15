@@ -34,6 +34,16 @@ my-project/
     └── ...                # Java source files
 ```
 
+## Installation
+
+Install once from the project root:
+
+```bash
+pip install -e .
+```
+
+This is an editable install — changes to any file under `src/apk_build/` take effect immediately with no reinstall needed. Only reinstall if you modify `pyproject.toml` (e.g. add a new entry point).
+
 ## Usage
 
 ```bash
