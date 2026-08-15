@@ -15,6 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:largeHeap="true"
+        android:hardwareAccelerated="true"
 		android:name=".Applications"
         android:resizeableActivity="true">
 
@@ -29,7 +30,8 @@
         </activity>
         <activity
 	       android:name=".CrashActivity"
-       	   android:screenOrientation="portrait"/>
+               android:theme="@style/AppTheme.NoActionBar"
+       	       android:screenOrientation="portrait"/>
 
         <meta-data
           android:name="android.max_aspect"
