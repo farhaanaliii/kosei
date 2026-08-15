@@ -18,6 +18,7 @@ def compile_java(project: Project) -> bool:
 		"-cp", DATA / "ecj.jar",
 		"org.eclipse.jdt.internal.compiler.batch.Main",
 		"-proc:none",
+		"-7",
 		"-cp", DATA / "android.classes.jar",
 		"-cp", project.generated,
 		"-d", project.bin / "classes",
@@ -40,12 +41,10 @@ def compile_classes(project: Project) -> bool:
 	res = subprocess.run([
 		DALVIK_VM,
 		"-Xmx256m",
-		"-cp", DATA / "d8.jar",
-		"com.android.tools.r8.D8",
-		"--release",
-		"--min-api", str(project.min_api),
-		"--lib", DATA / "android.classes.jar",
-		"--output", project.bin,
+		"-cp", DATA / "dx.dex",
+		"dx.dx.command.Main",
+		"--dex",
+		"--output", project.bin / "classes.dex",
 		project.bin / "classes"
 	], capture_output=True, text=True)
 	
