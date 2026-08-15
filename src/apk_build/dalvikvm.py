@@ -63,12 +63,18 @@ def sign_apk(project: Project) -> bool:
 	res = subprocess.run([
 		DALVIK_VM,
 		"-cp", DATA / "apksigner.dex",
-		"net.fornwall.apksigner.Main",
-		"-p",
-		"android",
-		DATA / "test.jks",
+		"com.android.apksigner.ApkSignerTool",
+		"sign",
+		"--ks", DATA / "debug.jks",
+		"--ks-type", "PKCS12",
+		"--ks-pass", "pass:android",
+		"--key-pass", "pass:android",
+		"--ks-key-alias", "androiddebugkey",
+    	"--v1-signing-enabled", "true",
+    	"--v2-signing-enabled", "true",
+    	"--v3-signing-enabled", "true",
+		"--out", project.signed_apk,
 		project.apk,
-		project.signed_apk
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
