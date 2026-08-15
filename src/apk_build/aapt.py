@@ -1,4 +1,5 @@
 import subprocess
+import zipfile
 from pathlib import Path
 
 from apk_build.project import Project
@@ -53,19 +54,15 @@ def link_resources(project: Project) -> bool:
 def append_classes(project: Project) -> bool:
 	print("[*] appending classes")
 	
-	res = subprocess.run([
-		"aapt",
-		"add",
-		"-f",
-		project.apk,
-		"classes.dex"
-	], capture_output=True, text=True, cwd=project.bin)
-	
-	if res.returncode == 0:
+	try:
+		with zipfile.ZipFile(project.apk, "a") as apk:
+			apk.write(project.bin / "classes.dex", "classes.dex")
+		
 		print("[*] appending classes successfully!")
 		return True
-	else:
+	except Exception as e:
 		print("[*] appending classes failed!")
 		print(res.stderr)
 		return False
+	
 
