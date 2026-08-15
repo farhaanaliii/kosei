@@ -1,7 +1,9 @@
-from importlib.resources import files
+from pathlib import Path
 
 
-DATA = files("apk_build") / "data"
+BASE = Path(__file__).resolve().parent.parent
+DATA = BASE / "data"
+TEMPLATES = BASE / "templates"
+
+
 DALVIK_VM = "/apex/com.android.art/bin/dalvikvm"
-TEMPLATES = files("apk_build") / "templates"
-
