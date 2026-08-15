@@ -1,74 +1,69 @@
 # apk-build
 
-A simple Python tool to compile, build, and sign Android APKs natively on Android environments (Termux / DalvikVM).
+Compiles, packages, and signs Android APKs directly on Android via Termux. No host machine, no Android Studio, no SDK installation required.
 
-## Features
+It works by invoking the device's own ART runtime (`dalvikvm`) to run Java-based build tools, combined with `aapt2` for resource compilation and Python's standard `zipfile` for APK assembly.
 
-- **Resource Compilation**: Compiles Android XML resources with `aapt`.
-- **Java Compilation**: Compiles Java code using Eclipse Compiler for Java (`ecj.jar`) via `dalvikvm`.
-- **Dexing**: Converts `.class` files to `classes.dex` using the modern `d8.jar` (with Java 8 desugaring).
-- **Packaging & Signing**: Packages the APK and signs it using `apksigner.dex` with `test.jks`.
+## Build Pipeline
 
-## Project Structure
-
-Target Android project directory format:
-
-```text
-my-project/
-├── AndroidManifest.xml
-├── res/
-│   └── values/
-│       └── strings.xml  # Must define <string name="app_name">AppName</string>
-└── src/
-    └── ...              # Java source code (*.java)
+```
+aapt2 compile     ->  compile res/ into .flat files
+aapt2 link        ->  link .flat + AndroidManifest.xml -> .apk + R.java
+ecj.jar           ->  compile .java + R.java -> .class files
+dx.dex            ->  convert .class -> classes.dex
+zipfile           ->  inject classes.dex into the .apk
+apksigner.dex     ->  sign the .apk with debug.jks
 ```
 
 ## Requirements
 
-- **Python**: `>= 3.14` (or managed via [`uv`](https://github.com/astral-sh/uv))
-- **Environment**: Android/Termux with `aapt` in system `PATH` and Dalvik VM at `/apex/com.android.art/bin/dalvikvm`.
-- **Data Dependencies**: Bundled in `./data/` (`android.jar`, `android.classes.jar`, `ecj.jar`, `d8.jar`, `apksigner.dex`, `test.jks`).
+- Python >= 3.14
+- Termux with `aapt2` in `$PATH`
+- ART at `/apex/com.android.art/bin/dalvikvm`
+- Populated `./data/` directory (see below)
 
-## Compatibility & API Support
+## Project Layout
 
-Based on the build pipeline (`ecj` with `-7` flag and legacy `dx.dex`), the compiled APKs have specific API constraints:
-
-- **Minimum Recommended API:** **21 (Android 5.0 Lollipop)**. With the D8 compiler upgrade, this pipeline fully supports modern Java 8 features (like lambdas) through desugaring, targeting API 21 by default.
-- **Java Language Support:** Java 8 (using the `-8` flag in `ecj` and desugared by `d8`).
-- **Templates:** The provided `templates/default` defaults to `minSdkVersion="21"` and `targetSdkVersion="33"`. It is set up with modern Android 12+ requirements (like explicit `android:exported` flags on activities) to ensure seamless installation on modern devices.
+```
+my-project/
+├── AndroidManifest.xml
+├── res/
+│   └── values/
+│       └── strings.xml    # must contain <string name="app_name">
+└── src/
+    └── ...                # Java source files
+```
 
 ## Usage
 
-The tool provides a Command-Line Interface (CLI) for generating and building projects.
-
-### 1. Create a New Project
-
-Use the `new` command to generate a template project. You must provide the app name, the target directory, and the Java package name.
-
-Using `uv`:
 ```bash
-uv run apk-build new "My App" ./projects com.example.myapp
+# scaffold a new project
+apk-build new "My App" ./projects com.example.myapp
+
+# build it
+apk-build build ./projects/MyApp
 ```
-Or using standard Python:
+
+Or without the installed entrypoint:
+
 ```bash
 python -m apk_build new "My App" ./projects com.example.myapp
-```
-
-### 2. Build an Existing Project
-
-Use the `build` command to compile and sign the project.
-
-Using `uv`:
-```bash
-uv run apk-build build ./projects/MyApp
-```
-Or using standard Python:
-```bash
 python -m apk_build build ./projects/MyApp
 ```
 
-## Output
+Output:
+- `build/[AppName].apk` — unsigned, inside the project's `build/` directory
+- `[AppName].apk` — v1/v2/v3 signed, written to the project root
 
-After a successful build, the following files will be created in your target project directory:
-- `[AppName].apk` — Unsigned APK file
-- `[AppName]_sign.apk` — Signed APK ready for installation
+## data/ Directory
+
+All runtime binaries live here. None of these are available natively in Termux, so they are bundled manually.
+
+| File | What it is | How it's used |
+|---|---|---|
+| `android.jar` | Android framework resource stubs (compile-time only) | Passed to `aapt2 link -I` to resolve `@android:` attribute references and produce `R.java` |
+| `android.classes.jar` | Android framework class library | Passed to `ecj.jar` via `-cp` so the Java compiler can resolve `android.*` imports against real API definitions |
+| `ecj.jar` | Eclipse Compiler for Java — a self-contained `javac` replacement bundled as a runnable `.jar` | Invoked via `dalvikvm -cp ecj.jar org.eclipse.jdt.internal.compiler.batch.Main` to compile `.java` source into `.class` bytecode |
+| `dx.dex` | The `dx` Dalvik cross-assembler, itself packaged as a `.dex` | Invoked via `dalvikvm -cp dx.dex dx.dx.command.Main --dex` to translate `.class` bytecode into `classes.dex` (Dalvik bytecode) |
+| `apksigner.dex` | Google's `apksigner` tool packaged as a `.dex` | Invoked via `dalvikvm -cp apksigner.dex com.android.apksigner.ApkSignerTool sign` to apply JAR (v1), APK Signature Scheme v2, and v3 signatures |
+| `debug.jks` | PKCS12 keystore holding the standard Android debug key (`androiddebugkey`) | Provided to `apksigner.dex` via `--ks`. Password is `android` on both the store and key |
