@@ -1,6 +1,5 @@
 import subprocess
 import zipfile
-from pathlib import Path
 
 from apk_build.project import Project
 from apk_build.constants import DATA
@@ -62,7 +61,7 @@ def append_classes(project: Project) -> bool:
 		return True
 	except Exception as e:
 		print("[*] appending classes failed!")
-		print(res.stderr)
+		print(str(e))
 		return False
 	
 
