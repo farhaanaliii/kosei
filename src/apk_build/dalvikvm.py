@@ -73,6 +73,7 @@ def sign_apk(project: Project) -> bool:
     	"--v1-signing-enabled", "true",
     	"--v2-signing-enabled", "true",
     	"--v3-signing-enabled", "true",
+    	"--v4-signing-enabled", "false",
 		"--out", project.signed_apk,
 		project.apk,
 	], capture_output=True, text=True)
