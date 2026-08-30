@@ -77,3 +77,19 @@ All runtime binaries live here. None of these are available natively in Termux, 
 | `dx.dex` | The `dx` Dalvik cross-assembler, itself packaged as a `.dex` | Invoked via `dalvikvm -cp dx.dex dx.dx.command.Main --dex` to translate `.class` bytecode into `classes.dex` (Dalvik bytecode) |
 | `apksigner.dex` | Google's `apksigner` tool packaged as a `.dex` | Invoked via `dalvikvm -cp apksigner.dex com.android.apksigner.ApkSignerTool sign` to apply JAR (v1), APK Signature Scheme v2, and v3 signatures |
 | `debug.jks` | PKCS12 keystore holding the standard Android debug key (`androiddebugkey`) | Provided to `apksigner.dex` via `--ks`. Password is `android` on both the store and key |
+
+## TODO / Roadmap
+
+- [ ] **Pipeline Error Handling**: Abort build execution immediately if any step (`aapt2`, `ecj`, `dx`, `apksigner`) fails.
+- [ ] **External Libraries (`libs/`)**: Support bundling 3rd-party `.jar` and `.aar` dependencies.
+- [ ] **Assets Support (`assets/`)**: Automatically pass project `assets/` directory to `aapt2 link`.
+- [ ] **Custom Release Keystore**: Add CLI options to sign with release keystores (`--ks`, `--ks-pass`, `--key-pass`, `--alias`).
+- [ ] **Zipalign Optimization**: Align uncompressed zip entries to 4-byte boundaries before signing.
+- [ ] **Native Libraries (`lib/`)**: Support bundling pre-compiled `.so` files into the APK.
+- [ ] **Additional CLI Commands**:
+  - `apk clean <project>`: Remove build artifacts.
+  - `apk run <project>`: Install and launch APK directly on device via Termux (`pm install` / `am start`).
+- [ ] **Incremental Building**: Cache compiled resources and Java classes, recompiling only modified sources.
+- [ ] **Kotlin Support**: Integrate standalone `kotlinc` for `.kt` source file compilation.
+- [ ] **Project Config File**: Optional `apk.toml` file for build settings and app metadata.
+
