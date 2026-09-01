@@ -28,12 +28,18 @@ def main() -> None:
 		project = Project(args.project.resolve())
 		print(f"[*] building '{project.app_name}'")
 		
-		aapt.compile_resources(project)
-		aapt.link_resources(project)
-		dalvikvm.compile_java(project)
-		dalvikvm.compile_classes(project)
-		aapt.append_classes(project)
-		dalvikvm.sign_apk(project)
+		if not aapt.compile_resources(project):
+			return
+		if not aapt.link_resources(project):
+			return
+		if not dalvikvm.compile_java(project):
+			return
+		if not dalvikvm.compile_classes(project):
+			return
+		if not aapt.append_classes(project):
+			return
+		if not dalvikvm.sign_apk(project):
+			return
 
 
-	
+
