@@ -29,8 +29,7 @@ def link_resources(project: Project) -> bool:
 	print("[*] linking resources")
 	
 	flats = sorted(project.compiled.rglob("*.flat"))
-	
-	res = subprocess.run([
+	args = [
 		"aapt2",
 		"link",
 		"-I", DATA / "android.jar",
@@ -38,7 +37,12 @@ def link_resources(project: Project) -> bool:
 		"--java", project.generated,
 		"-o", project.apk,
 		*flats
-	], capture_output=True, text=True)
+	]
+	
+	if project.assets.exists():
+		args.extend(["-A", project.assets])
+	
+	res = subprocess.run(args, capture_output=True, text=True)
 	
 	if res.returncode == 0:
 		print("[*] resources linked successfully!")

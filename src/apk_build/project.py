@@ -37,6 +37,7 @@ class Project:
 		self.manifest = self.path / "AndroidManifest.xml"
 		self.res = self.path / "res"
 		self.src = self.path / "src"
+		self.assets = self.path / "assets"
 		
 		for path in (self.build, self.temp, self.generated, self.bin, self.compiled):
 			path.mkdir(exist_ok=True)
