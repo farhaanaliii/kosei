@@ -41,6 +41,9 @@ class Project:
 		for path in (self.build, self.temp, self.generated, self.bin, self.compiled):
 			path.mkdir(exist_ok=True)
 	
-
+	@property
+	def libs(self) -> list[Path]:
+		return list((self.path / "libs").glob("*.jar"))
+	
 	
 	

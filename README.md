@@ -81,7 +81,7 @@ All runtime binaries live here. None of these are available natively in Termux, 
 ## TODO / Roadmap
 
 - [x] **Pipeline Error Handling**: Abort build execution immediately if any step (`aapt2`, `ecj`, `dx`, `apksigner`) fails.
-- [ ] **External Libraries (`libs/`)**: Support bundling 3rd-party `.jar` and `.aar` dependencies.
+- [x] **External Libraries (`libs/`)**: Support bundling 3rd-party `.jar` dependencies.
 - [ ] **Assets Support (`assets/`)**: Automatically pass project `assets/` directory to `aapt2 link`.
 - [ ] **Custom Release Keystore**: Add CLI options to sign with release keystores (`--ks`, `--ks-pass`, `--key-pass`, `--alias`).
 - [ ] **Zipalign Optimization**: Align uncompressed zip entries to 4-byte boundaries before signing.

@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path 
 
@@ -10,6 +11,11 @@ def compile_java(project: Project) -> bool:
 	print("[*] compiling java")
 	
 	sources = list((project.src).rglob("*.java"))
+	classpath = [
+		DATA / "android.classes.jar",
+		project.generated,
+		*project.libs
+	]
 	
 	res = subprocess.run([
 		DALVIK_VM,
@@ -19,8 +25,7 @@ def compile_java(project: Project) -> bool:
 		"org.eclipse.jdt.internal.compiler.batch.Main",
 		"-proc:none",
 		"-7",
-		"-cp", DATA / "android.classes.jar",
-		"-cp", project.generated,
+		"-cp", os.pathsep.join(map(str, classpath)),
 		"-d", project.bin / "classes",
 		"-sourcepath", project.src,
 		*sources
@@ -45,7 +50,8 @@ def compile_classes(project: Project) -> bool:
 		"dx.dx.command.Main",
 		"--dex",
 		"--output", project.bin / "classes.dex",
-		project.bin / "classes"
+		project.bin / "classes",
+		*project.libs
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
