@@ -3,7 +3,6 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent
 DATA = BASE / "data"
-CACHE = DATA / "cache"
 TEMPLATES = BASE / "templates"
 
 
