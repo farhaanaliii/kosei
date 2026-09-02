@@ -3,9 +3,11 @@ import subprocess
 from pathlib import Path 
 
 from apk_build.project import Project
-from apk_build.constants import DATA, DALVIK_VM
+from apk_build.constants import DATA, DALVIK_VM, CACHE
 
 
+CACHE.mkdir(exist_ok=True)
+env = {**os.environ, "ANDROID_DATA": str(CACHE)}
 
 def compile_java(project: Project) -> bool:
 	print("[*] compiling java")
@@ -29,7 +31,7 @@ def compile_java(project: Project) -> bool:
 		"-d", project.bin / "classes",
 		"-sourcepath", project.src,
 		*sources
-	], capture_output=True, text=True)
+	], capture_output=True, text=True, env=env)
 	
 	if res.returncode == 0:
 		print("[*] java compiled successfully!")
@@ -44,7 +46,7 @@ def compile_classes(project: Project) -> bool:
 	print("[*] compiling classes")
 	
 	classes = list((project.bin / "classes").rglob("*.class"))
-	
+
 	res = subprocess.run([
 		DALVIK_VM,
 		"-Xmx256m",
@@ -54,7 +56,7 @@ def compile_classes(project: Project) -> bool:
 		"--output", project.bin,
 		*classes,
 		*project.libs
-	], capture_output=True, text=True)
+	], capture_output=True, text=True, env=env)
 	
 	if res.returncode == 0:
 		print("[*] classes compiled successfully!")
@@ -67,7 +69,7 @@ def compile_classes(project: Project) -> bool:
 
 def sign_apk(project: Project) -> bool:
 	print("[*] signing apk")
-	
+
 	res = subprocess.run([
 		DALVIK_VM,
 		"-cp", DATA / "apksigner.dex",
@@ -75,13 +77,13 @@ def sign_apk(project: Project) -> bool:
 		"sign",
 		"--key", DATA / "debug.pk8",
 		"--cert", DATA / "debug.x509.pem",
-    	"--v1-signing-enabled", "true",
-    	"--v2-signing-enabled", "true",
-    	"--v3-signing-enabled", "true",
-    	"--v4-signing-enabled", "false",
+		"--v1-signing-enabled", "true",
+		"--v2-signing-enabled", "true",
+		"--v3-signing-enabled", "true",
+		"--v4-signing-enabled", "false",
 		"--out", project.signed_apk,
 		project.apk,
-	], capture_output=True, text=True)
+	], capture_output=True, text=True, env=env)
 	
 	if res.returncode == 0:
 		print("[*] apk signed successfully!")
@@ -90,4 +92,3 @@ def sign_apk(project: Project) -> bool:
 		print("[*] apk signing failed!")
 		print(res.stderr)
 		return False
-
