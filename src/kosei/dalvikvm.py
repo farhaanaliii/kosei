@@ -49,6 +49,7 @@ def compile_classes(project: Project) -> bool:
 		"-cp", DATA / "d8.dex",
 		"com.android.tools.r8.D8",
 		"--lib", DATA / "android.jar",
+		"--min-api", str(project.min_api),
 		"--output", project.bin,
 		*classes,
 		*project.libs

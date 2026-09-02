@@ -54,11 +54,13 @@ def link_resources(project: Project) -> bool:
 
 def append_classes_and_libs(project: Project) -> bool:
 	libs = list(project.native_libs.rglob("*.so"))
+	dex_files = sorted(project.bin.glob("classes*.dex"))
 	
 	try:
 		with zipfile.ZipFile(project.apk, "a") as apk:
 			print("[*] appending classes")
-			apk.write(project.bin / "classes.dex", "classes.dex")
+			for dex in dex_files:
+				apk.write(dex, dex.name)
 			
 			if libs:
 				print("[*] appending native libs")
