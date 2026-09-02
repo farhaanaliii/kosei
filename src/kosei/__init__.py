@@ -55,3 +55,6 @@ def main() -> None:
             return
         if not dalvikvm.sign_apk(project):
             return
+        print(f"[*] built '{project.app_name}' -> {project.signed_apk.name}")
+
+

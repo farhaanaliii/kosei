@@ -17,7 +17,6 @@ def compile_resources(project: Project) -> bool:
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
-		print("[*] resources compiled successfully!")
 		return True
 	else:
 		print("[*] resources compiling failed!")
@@ -45,7 +44,6 @@ def link_resources(project: Project) -> bool:
 	res = subprocess.run(args, capture_output=True, text=True)
 	
 	if res.returncode == 0:
-		print("[*] resources linked successfully!")
 		return True
 	else:
 		print("[*] resource linking failed!")
@@ -60,12 +58,12 @@ def append_classes(project: Project) -> bool:
 	try:
 		with zipfile.ZipFile(project.apk, "a") as apk:
 			apk.write(project.bin / "classes.dex", "classes.dex")
-		
-		print("[*] appending classes successfully!")
 		return True
 	except Exception as e:
 		print("[*] appending classes failed!")
 		print(str(e))
 		return False
+
+
 	
 
