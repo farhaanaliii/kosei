@@ -1,7 +1,7 @@
 import shutil
 from pathlib import Path
 
-from apk_build.constants import TEMPLATES
+from kosei.constants import TEMPLATES
 
 
 def replace_placeholder(file_path: Path, placeholder: str, content: str):

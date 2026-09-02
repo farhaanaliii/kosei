@@ -1,8 +1,8 @@
 import subprocess
 import zipfile
 
-from apk_build.project import Project
-from apk_build.constants import DATA
+from kosei.project import Project
+from kosei.constants import DATA
 
 
 

@@ -1,13 +1,13 @@
 [project]
-name = "apk-build"
+name = "kosei"
 version = "0.1.0"
-description = "Compiles, packages, and signs Android APKs directly on Android via Termux"
+description = "Compiles, packages, and signs Android APKs directly on Android devices via Termux"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = []
 
 [project.scripts]
-apk = "apk_build:main"
+kosei = "kosei:main"
 
 [build-system]
 requires = ["hatchling"]
