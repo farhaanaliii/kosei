@@ -36,21 +36,20 @@ Install editable mode from the project root:
 pip install -e .
 ```
 
-## Usage
+# create a project with default package (com.example.hello)
+apk new Hello
 
-```bash
-# scaffold a new project
-apk-build new "My App" ./projects com.example.myapp
+# create a project with custom package and directory
+apk new Hello com.mycompany.hello ./projects
 
-# build the project
-apk-build build ./projects/MyApp
-```
+# build project in current directory
+apk build
 
-Alternative python module execution:
+# build project in specified directory
+apk build ./projects/Hello
 
-```bash
-python -m apk_build new "My App" ./projects com.example.myapp
-python -m apk_build build ./projects/MyApp
+# clean build artifacts
+apk clean ./projects/Hello
 ```
 
 Build Outputs:
