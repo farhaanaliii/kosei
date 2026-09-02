@@ -10,12 +10,18 @@ def replace_placeholder(file_path: Path, placeholder: str, content: str):
     file_path.write_text(text, encoding="utf-8")
 
 
-def create_project(path: Path, app_name: str, package_name: str) -> bool:
+def create_project(app_name: str, package_name: str | None = None, path: Path | None = None) -> bool:
+    if path is None:
+        path = Path(".")
+    if not package_name:
+        clean_name = "".join(c.lower() for c in app_name if c.isalnum()) or "myapp"
+        package_name = f"com.example.{clean_name}"
+        
     path.mkdir(exist_ok=True)
-    project_folder = path / app_name
+    project_folder = path / app_name if path.name != app_name else path
     
-    if project_folder.exists():
-        print(f"[x] '{str(project_folder)}' already exists!")
+    if project_folder.exists() and any(project_folder.iterdir()):
+        print(f"[x] '{str(project_folder)}' already exists and is not empty!")
         return False
 
     shutil.copytree(TEMPLATES / "default", project_folder)

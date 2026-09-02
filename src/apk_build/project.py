@@ -1,3 +1,4 @@
+import shutil
 from xml.etree import ElementTree
 from pathlib import Path
 
@@ -46,5 +47,12 @@ class Project:
 	def libs(self) -> list[Path]:
 		return list((self.path / "libs").glob("*.jar"))
 	
-	
-	
+	def clean(self) -> bool:
+		if not self.build.exists():
+			print(f"[*] Nothing to clean in '{self.path}'")
+			return True
+
+		shutil.rmtree(self.build)
+		print(f"[*] Cleaned build directory '{self.build}'")
+		return True
+		
