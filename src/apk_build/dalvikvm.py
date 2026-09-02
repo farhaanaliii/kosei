@@ -74,7 +74,7 @@ def sign_apk(project: Project) -> bool:
 		"com.android.apksigner.ApkSignerTool",
 		"sign",
 		"--ks", DATA / "debug.jks",
-		"--ks-type", "PKCS12",
+		"--ks-type", "JKS",
 		"--ks-pass", "pass:android",
 		"--key-pass", "pass:android",
 		"--ks-key-alias", "androiddebugkey",
