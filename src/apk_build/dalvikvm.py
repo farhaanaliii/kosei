@@ -43,14 +43,16 @@ def compile_java(project: Project) -> bool:
 def compile_classes(project: Project) -> bool:
 	print("[*] compiling classes")
 	
+	classes = list((project.bin / "classes").rglob("*.class"))
+	
 	res = subprocess.run([
 		DALVIK_VM,
 		"-Xmx256m",
-		"-cp", DATA / "dx.dex",
-		"dx.dx.command.Main",
-		"--dex",
-		"--output", project.bin / "classes.dex",
-		project.bin / "classes",
+		"-cp", DATA / "d8.dex",
+		"com.android.tools.r8.D8",
+		"--lib", DATA / "android.jar",
+		"--output", project.bin,
+		*classes,
 		*project.libs
 	], capture_output=True, text=True)
 	
