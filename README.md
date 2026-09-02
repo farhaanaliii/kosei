@@ -93,7 +93,7 @@ All runtime binaries live under `src/data/` and execute natively on Android's `d
 - [x] **Java 16 Support**: Upgrade ECJ to 3.27.0 and replace legacy `dx` with Google D8.
 - [ ] **Custom Release Keystore**: Add CLI options to sign with release keystores (`--ks`, `--ks-pass`, `--key-pass`, `--alias`).
 - [ ] **Zipalign Optimization**: Align uncompressed zip entries to 4-byte boundaries before signing.
-- [ ] **Native Libraries (`lib/`)**: Support bundling pre-compiled `.so` files into the APK.
+- [x] **Native Libraries (`lib/`)**: Support bundling pre-compiled `.so` files into the APK.
 - [ ] **Incremental Building**: Cache compiled resources and Java classes, recompiling only modified sources.
 - [ ] **Kotlin Support**: Integrate standalone `kotlinc` for `.kt` source file compilation.
 

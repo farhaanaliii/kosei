@@ -52,12 +52,19 @@ def link_resources(project: Project) -> bool:
 
 
 
-def append_classes(project: Project) -> bool:
-	print("[*] appending classes")
+def append_classes_and_libs(project: Project) -> bool:
+	libs = list(project.native_libs.rglob("*.so"))
 	
 	try:
 		with zipfile.ZipFile(project.apk, "a") as apk:
+			print("[*] appending classes")
 			apk.write(project.bin / "classes.dex", "classes.dex")
+			
+			if libs:
+				print("[*] appending native libs")
+				for lib in libs:
+					apk.write(lib, lib.relative_to(project.path).as_posix())
+		
 		return True
 	except Exception as e:
 		print("[*] appending classes failed!")

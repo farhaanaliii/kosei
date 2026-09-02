@@ -35,10 +35,13 @@ class Project:
 		self.generated = self.build / "generated"
 		self.bin = self.build / "bin"
 		self.compiled = self.build / "compiled"
+		
 		self.manifest = self.path / "AndroidManifest.xml"
 		self.res = self.path / "res"
 		self.src = self.path / "src"
 		self.assets = self.path / "assets"
+		self.native_libs = self.path / "lib"
+		
 		
 		for path in (self.build, self.temp, self.generated, self.bin, self.compiled):
 			path.mkdir(exist_ok=True)
