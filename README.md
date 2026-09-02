@@ -36,6 +36,9 @@ Install editable mode from the project root:
 pip install -e .
 ```
 
+## Usage
+
+```bash
 # create a project with default package (com.example.hello)
 apk new Hello
 
