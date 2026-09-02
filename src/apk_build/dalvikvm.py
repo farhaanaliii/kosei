@@ -3,11 +3,8 @@ import subprocess
 from pathlib import Path 
 
 from apk_build.project import Project
-from apk_build.constants import DATA, DALVIK_VM, CACHE
+from apk_build.constants import DATA, DALVIK_VM
 
-
-CACHE.mkdir(exist_ok=True)
-env = {**os.environ, "ANDROID_DATA": str(CACHE)}
 
 def compile_java(project: Project) -> bool:
 	print("[*] compiling java")
@@ -31,7 +28,7 @@ def compile_java(project: Project) -> bool:
 		"-d", project.bin / "classes",
 		"-sourcepath", project.src,
 		*sources
-	], capture_output=True, text=True, env=env)
+	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
 		print("[*] java compiled successfully!")
@@ -46,7 +43,7 @@ def compile_classes(project: Project) -> bool:
 	print("[*] compiling classes")
 	
 	classes = list((project.bin / "classes").rglob("*.class"))
-
+	
 	res = subprocess.run([
 		DALVIK_VM,
 		"-Xmx256m",
@@ -56,7 +53,7 @@ def compile_classes(project: Project) -> bool:
 		"--output", project.bin,
 		*classes,
 		*project.libs
-	], capture_output=True, text=True, env=env)
+	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
 		print("[*] classes compiled successfully!")
@@ -69,7 +66,7 @@ def compile_classes(project: Project) -> bool:
 
 def sign_apk(project: Project) -> bool:
 	print("[*] signing apk")
-
+	
 	res = subprocess.run([
 		DALVIK_VM,
 		"-cp", DATA / "apksigner.dex",
@@ -83,7 +80,7 @@ def sign_apk(project: Project) -> bool:
 		"--v4-signing-enabled", "false",
 		"--out", project.signed_apk,
 		project.apk,
-	], capture_output=True, text=True, env=env)
+	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
 		print("[*] apk signed successfully!")

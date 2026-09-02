@@ -9,6 +9,6 @@ wheels/
 # Virtual environments
 .venv
 
-# Runtime cache
-src/data/cache/
+# Android ART runtime AOT compilation output
+src/data/oat/
 oat/
