@@ -96,3 +96,8 @@ All runtime binaries live under `src/data/` and execute natively on Android's `d
 - [ ] **Native Libraries (`lib/`)**: Support bundling pre-compiled `.so` files into the APK.
 - [ ] **Incremental Building**: Cache compiled resources and Java classes, recompiling only modified sources.
 - [ ] **Kotlin Support**: Integrate standalone `kotlinc` for `.kt` source file compilation.
+
+## Maintainer
+
+Created and maintained by [Farhan Ali](https://github.com/farhaanaliii) (<i.farhanali.dev@gmail.com>).
+
