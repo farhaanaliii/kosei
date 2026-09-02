@@ -31,7 +31,6 @@ def compile_java(project: Project) -> bool:
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
-		print("[*] java compiled successfully!")
 		return True
 	else:
 		print("[*] java compiling failed!")
@@ -56,7 +55,6 @@ def compile_classes(project: Project) -> bool:
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
-		print("[*] classes compiled successfully!")
 		return True
 	else:
 		print("[*] classes compiling failed!")
@@ -83,7 +81,6 @@ def sign_apk(project: Project) -> bool:
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
-		print("[*] apk signed successfully!")
 		return True
 	else:
 		print("[*] apk signing failed!")
