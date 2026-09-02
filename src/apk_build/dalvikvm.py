@@ -24,7 +24,7 @@ def compile_java(project: Project) -> bool:
 		"-cp", DATA / "ecj.jar",
 		"org.eclipse.jdt.internal.compiler.batch.Main",
 		"-proc:none",
-		"-7",
+		"-17",
 		"-cp", os.pathsep.join(map(str, classpath)),
 		"-d", project.bin / "classes",
 		"-sourcepath", project.src,
