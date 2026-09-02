@@ -51,7 +51,7 @@ def main() -> None:
             return
         if not dalvikvm.compile_classes(project):
             return
-        if not aapt.append_classes(project):
+        if not aapt.append_classes_and_libs(project):
             return
         if not dalvikvm.sign_apk(project):
             return
