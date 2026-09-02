@@ -1,6 +1,6 @@
 <div align="center">
 
-# apk-build
+# kosei
 
 [![Python Version](https://img.shields.io/badge/python-3.14%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -24,8 +24,8 @@ apksigner.dex     ->  sign the .apk with debug.pk8 and debug.x509.pem
 ## Requirements
 
 - Python >= 3.14
-- Termux environment with `aapt2` in `$PATH`
-- Android ART runtime (`/apex/com.android.art/bin/dalvikvm` or `/system/bin/dalvikvm`)
+- Termux with `aapt2` in `$PATH`
+- ART at `/apex/com.android.art/bin/dalvikvm` or `/system/bin/dalvikvm`
 - Bundled runtime binaries in `./src/data/`
 
 ## Installation
@@ -36,23 +36,35 @@ Install editable mode from the project root:
 pip install -e .
 ```
 
+Or using `uv`:
+
+```bash
+uv pip install -e .
+```
 ## Usage
 
 ```bash
 # create a project with default package (com.example.hello)
-apk new Hello
+kosei new Hello
 
 # create a project with custom package and directory
-apk new Hello com.mycompany.hello ./projects
+kosei new Hello com.mycompany.hello ./projects
 
 # build project in current directory
-apk build
+kosei build
 
 # build project in specified directory
-apk build ./projects/Hello
+kosei build ./projects/Hello
 
 # clean build artifacts
-apk clean ./projects/Hello
+kosei clean ./projects/Hello
+```
+
+Alternative python module execution:
+
+```bash
+python -m kosei new Hello
+python -m kosei build
 ```
 
 Build Outputs:
@@ -82,6 +94,5 @@ All runtime binaries live under `src/data/` and execute natively on Android's `d
 - [ ] **Custom Release Keystore**: Add CLI options to sign with release keystores (`--ks`, `--ks-pass`, `--key-pass`, `--alias`).
 - [ ] **Zipalign Optimization**: Align uncompressed zip entries to 4-byte boundaries before signing.
 - [ ] **Native Libraries (`lib/`)**: Support bundling pre-compiled `.so` files into the APK.
-- [ ] **Additional CLI Commands**: `apk clean` and `apk run`.
 - [ ] **Incremental Building**: Cache compiled resources and Java classes, recompiling only modified sources.
 - [ ] **Kotlin Support**: Integrate standalone `kotlinc` for `.kt` source file compilation.

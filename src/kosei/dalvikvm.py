@@ -2,8 +2,8 @@ import os
 import subprocess
 from pathlib import Path 
 
-from apk_build.project import Project
-from apk_build.constants import DATA, DALVIK_VM
+from kosei.project import Project
+from kosei.constants import DATA, DALVIK_VM
 
 
 def compile_java(project: Project) -> bool:

@@ -9,7 +9,7 @@ from . import dalvikvm
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        prog="apk",
+        prog="kosei",
         description="Compiles, packages, and signs Android APKs directly on Android via Termux."
     )
     
