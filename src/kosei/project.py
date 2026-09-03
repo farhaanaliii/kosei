@@ -8,10 +8,8 @@ class Project:
 		self.path = project_folder
 		self._init_paths()
 		
-		self._strings_tree = ElementTree.parse(self.res / "values" / "strings.xml")
-		self._strings_root = self._strings_tree.getroot()
-		self._manifest_tree = ElementTree.parse(self.manifest)
-		self._manifest_root = self._manifest_tree.getroot()
+		self._strings_root = ElementTree.parse(self.res / "values" / "strings.xml").getroot()
+		self._manifest_root = ElementTree.parse(self.manifest).getroot()
 		
 		self._init_app()
 	
