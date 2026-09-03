@@ -26,41 +26,50 @@ apksigner.dex     ->  sign the .apk with debug.pk8 and debug.x509.pem
 - Python >= 3.14
 - Termux with `aapt2` in `$PATH`
 - ART at `/apex/com.android.art/bin/dalvikvm` or `/system/bin/dalvikvm`
-- Bundled runtime binaries in `./src/data/`
+- Bundled runtime binaries in `src/data/`
 
 ## Installation
 
-Install editable mode from the project root:
+Create a virtual environment and install in editable mode using `uv`:
 
 ```bash
-pip install -e .
-```
-
-Or using `uv`:
-
-```bash
+uv venv
 uv pip install -e .
 ```
+
 ## Usage
 
+Create a project with default package (com.example.hello):
+
 ```bash
-# create a project with default package (com.example.hello)
 kosei new Hello
+```
 
-# create a project with custom package and directory
+Create a project with custom package and directory:
+
+```bash
 kosei new Hello com.mycompany.hello ./projects
+```
 
-# build project in current directory
+Build project in current directory:
+
+```bash
 kosei build
+```
 
-# build project in specified directory
+Build project in specified directory:
+
+```bash
 kosei build ./projects/Hello
+```
 
-# clean build artifacts
+Clean build artifacts:
+
+```bash
 kosei clean ./projects/Hello
 ```
 
-Alternative python module execution:
+Alternative Python module execution:
 
 ```bash
 python -m kosei new Hello
@@ -75,7 +84,7 @@ Build Outputs:
 
 All runtime binaries live under `src/data/` and execute natively on Android's `dalvikvm` engine.
 
-| File | What it is | How it's used |
+| File | Description | Purpose |
 |---|---|---|
 | `android.jar` | Android framework resource stubs | Passed to `aapt2 link -I` to resolve `@android:` attribute references and generate `R.java` |
 | `android.classes.jar` | Android framework class definitions | Passed to `ecj.jar` via `-cp` so the Java compiler resolves `android.*` imports |
@@ -85,19 +94,21 @@ All runtime binaries live under `src/data/` and execute natively on Android's `d
 | `debug.pk8` | PKCS8 private key for debug signing | Provided to `apksigner` via `--key` to sign debug builds |
 | `debug.x509.pem` | X.509 certificate for debug signing | Provided to `apksigner` via `--cert` alongside `debug.pk8` |
 
-## Roadmap
+## Technical Roadmap
 
-- [x] **Pipeline Error Handling**: Abort build execution immediately if any step (`aapt2`, `ecj`, `d8`, `apksigner`) fails.
-- [x] **External Libraries (`libs/`)**: Support bundling 3rd-party `.jar` dependencies.
-- [x] **Assets Support (`assets/`)**: Automatically pass project `assets/` directory to `aapt2 link`.
-- [x] **Java 16 Support**: Upgrade ECJ to 3.27.0 and replace legacy `dx` with Google D8.
-- [ ] **Custom Release Keystore**: Add CLI options to sign with release keystores (`--ks`, `--ks-pass`, `--key-pass`, `--alias`).
-- [ ] **Zipalign Optimization**: Align uncompressed zip entries to 4-byte boundaries before signing.
-- [x] **Native Libraries (`lib/`)**: Support bundling pre-compiled `.so` files into the APK.
-- [ ] **Incremental Building**: Cache compiled resources and Java classes, recompiling only modified sources.
-- [ ] **Kotlin Support**: Integrate standalone `kotlinc` for `.kt` source file compilation.
+- [x] **Native ART Engine Execution**: Execute compilation toolchain (`ecj`, `d8`, `apksigner`) natively on Dalvik VM without host JDK dependencies.
+- [x] **Java 16 & Google D8 Support**: Modernized compilation pipeline with ECJ 3.27.0 and Google D8 dexer replacing legacy dx.
+- [x] **Jar & Native Binary Bundling**: Automated linking for 3rd-party `.jar` files in `libs/` and `.so` binaries in `lib/`.
+- [x] **Automatic Multidex Support**: DEX splitting and secondary dex injection for large codebases exceeding 64k method limits.
+- [ ] **Custom Release Keystore Profiles**: CLI options (`--keystore`, `--alias`, `--ks-pass`, `--key-pass`) for production signing.
+- [ ] **Incremental Compilation Engine**: Hashing system to cache resource compilation and Java bytecode, rebuilding only modified sources.
+- [ ] **Zipalign Optimization Engine**: Native 4-byte boundary alignment for uncompressed zip entries prior to signature verification.
+- [ ] **Kotlin Compiler Support**: Integration of `kotlinc` targeting Dalvik/ART bytecode for `.kt` source files.
+- [ ] **AAR & Remote Dependency Resolution**: Parsing `.aar` archives and automated transitive Maven package resolution.
+- [ ] **Automated ADB Deployment**: Device deployment via `--install` and `--launch` options using local ADB service.
 
 ## Maintainer
 
-Created and maintained by [Farhan Ali](https://github.com/farhaanaliii) (<i.farhanali.dev@gmail.com>).
+Created and maintained by [Farhan Ali](https://github.com/farhaanaliii) (i.farhanali.dev@gmail.com).
+
 
