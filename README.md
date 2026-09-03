@@ -48,7 +48,7 @@ kosei new Hello
 Create a project with custom package and directory:
 
 ```bash
-kosei new Hello com.mycompany.hello ./projects
+kosei new Hello -p com.mycompany.hello -d ./projects
 ```
 
 Build project in current directory:
