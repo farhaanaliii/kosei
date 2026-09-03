@@ -10,7 +10,7 @@ def replace_placeholder(file_path: Path, placeholder: str, content: str):
     file_path.write_text(text, encoding="utf-8")
 
 
-def create_project(app_name: str, package_name: str | None = None, path: Path | None = None) -> bool:
+def create_project(app_name: str, package_name: str=None, path: Path=None) -> bool:
     if path is None:
         path = Path(".")
     if not package_name:
