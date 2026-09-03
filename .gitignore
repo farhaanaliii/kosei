@@ -12,3 +12,7 @@ wheels/
 # Android ART runtime AOT compilation output
 src/data/oat/
 oat/
+*.flock
+
+Test
+
