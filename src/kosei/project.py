@@ -10,7 +10,8 @@ class Project:
 		
 		self._strings_root = ElementTree.parse(self.res / "values" / "strings.xml").getroot()
 		self._manifest_root = ElementTree.parse(self.manifest).getroot()
-		
+		self._android_ns = "{http://schemas.android.com/apk/res/android}"
+  
 		self._init_app()
 	
 	def _init_app(self):
@@ -18,10 +19,11 @@ class Project:
 		self.package_name = self._manifest_root.get("package")
 		
 		uses_sdk = self._manifest_root.find("uses-sdk")
-		self.min_api = uses_sdk.get("{http://schemas.android.com/apk/res/android}minSdkVersion")
+		self.min_api = uses_sdk.get(f"{self._android_ns}minSdkVersion")
 		
-		self.apk = self.build / f"{self.app_name}.apk"
-		self.signed_apk = self.path / f"{self.app_name}.apk"
+		version_name = self._manifest_root.get(f"{self._android_ns}versionName")
+		self.apk = self.build / f"{self.app_name}_unsigned.apk"
+		self.signed_apk = self.path / f"{self.app_name}_v{version_name}.apk"
 	
 	def get_string(self, name: str) -> str:
 		element = self._strings_root.find(f"./string[@name='{name}']")
