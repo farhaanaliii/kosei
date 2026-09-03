@@ -25,7 +25,7 @@ class Project:
 		self.apk = self.build / f"{self.app_name}.apk"
 		self.signed_apk = self.path / f"{self.app_name}.apk"
 	
-	def get_string(self, name: str) -> str | None:
+	def get_string(self, name: str) -> str:
 		element = self._strings_root.find(f"./string[@name='{name}']")
 		return element.text if element is not None else None
 
@@ -47,7 +47,7 @@ class Project:
 			path.mkdir(exist_ok=True)
 	
 	@property
-	def libs(self) -> list[Path]:
+	def libs(self) -> list:
 		return list((self.path / "libs").glob("*.jar"))
 	
 	def clean(self) -> bool:

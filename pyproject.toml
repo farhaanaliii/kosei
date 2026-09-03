@@ -3,7 +3,7 @@ name = "kosei"
 version = "0.1.0"
 description = "Compiles, packages, and signs Android APKs directly on Android devices via Termux"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.8"
 dependencies = []
 
 [project.scripts]

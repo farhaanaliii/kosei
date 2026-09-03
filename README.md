@@ -2,7 +2,7 @@
 
 # kosei
 
-[![Python Version](https://img.shields.io/badge/python-3.14%2B-blue.svg)](https://www.python.org/)
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Termux-orange.svg)](https://termux.dev)
 
@@ -23,7 +23,7 @@ apksigner.dex     ->  sign the .apk with debug.pk8 and debug.x509.pem
 
 ## Requirements
 
-- Python >= 3.14
+- Python >= 3.8
 - Termux with `aapt2` in `$PATH`
 - ART at `/apex/com.android.art/bin/dalvikvm` or `/system/bin/dalvikvm`
 - Bundled runtime binaries in `src/data/`
