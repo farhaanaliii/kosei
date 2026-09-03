@@ -11,12 +11,12 @@ def replace_placeholder(file_path: Path, placeholder: str, content: str):
 
 
 def create_project(app_name: str, package_name: str=None, path: Path=None) -> bool:
-    if path is None:
-        path = Path(".")
-    if not package_name:
+    path = path or Path(".")
+    
+    if package_name is None:
         clean_name = "".join(c.lower() for c in app_name if c.isalnum()) or "myapp"
         package_name = f"com.example.{clean_name}"
-        
+    
     path.mkdir(exist_ok=True)
     project_folder = path / app_name if path.name != app_name else path
     
