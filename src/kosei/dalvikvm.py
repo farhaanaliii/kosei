@@ -6,9 +6,18 @@ from kosei.constants import DATA, DALVIK_VM
 
 
 def compile_java(project: Project) -> bool:
+	sources = list(project.src.rglob("*.java"))
+	r_java = project.generated / "R.java"
+	if r_java.exists():
+		sources.append(r_java)
+		
+	modified = project.filter_modified(sources)
+	classes_dir = project.bin / "classes"
+	if not modified and classes_dir.exists() and any(classes_dir.rglob("*.class")):
+		return True
+
 	print("[*] compiling java")
 	
-	sources = list((project.src).rglob("*.java"))
 	classpath = [
 		DATA / "android.classes.jar",
 		project.generated,
@@ -24,12 +33,13 @@ def compile_java(project: Project) -> bool:
 		"-proc:none",
 		"-16",
 		"-cp", os.pathsep.join(map(str, classpath)),
-		"-d", project.bin / "classes",
+		"-d", classes_dir,
 		"-sourcepath", project.src,
 		*sources
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
+		project.update_cache(sources)
 		return True
 	else:
 		print("[*] java compiling failed!")
@@ -38,9 +48,14 @@ def compile_java(project: Project) -> bool:
 
 
 def compile_classes(project: Project) -> bool:
-	print("[*] compiling classes")
-	
 	classes = list((project.bin / "classes").rglob("*.class"))
+	modified = project.filter_modified(classes)
+	
+	dex_files = list(project.bin.glob("classes*.dex"))
+	if not modified and dex_files:
+		return True
+
+	print("[*] compiling classes")
 	
 	res = subprocess.run([
 		DALVIK_VM,
@@ -55,6 +70,7 @@ def compile_classes(project: Project) -> bool:
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
+		project.update_cache(classes)
 		return True
 	else:
 		print("[*] classes compiling failed!")

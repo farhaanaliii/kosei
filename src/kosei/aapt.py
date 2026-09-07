@@ -5,8 +5,13 @@ from kosei.project import Project
 from kosei.constants import DATA
 
 
-
 def compile_resources(project: Project) -> bool:
+	res_files = [f for f in project.res.rglob("*") if f.is_file()]
+	modified = project.filter_modified(res_files)
+
+	if not modified and sorted(project.compiled.rglob("*.flat")):
+		return True
+
 	print("[*] compiling resources")
 	
 	res = subprocess.run([
@@ -17,6 +22,7 @@ def compile_resources(project: Project) -> bool:
 	], capture_output=True, text=True)
 	
 	if res.returncode == 0:
+		project.update_cache(res_files)
 		return True
 	else:
 		print("[*] resources compiling failed!")

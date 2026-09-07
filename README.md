@@ -101,7 +101,7 @@ All runtime binaries live under `src/data/` and execute natively on Android's `d
 - [x] **Jar & Native Binary Bundling**: Automated linking for 3rd-party `.jar` files in `libs/` and `.so` binaries in `lib/`.
 - [x] **Automatic Multidex Support**: DEX splitting and secondary dex injection for large codebases exceeding 64k method limits.
 - [ ] **Custom Release Keystore Profiles**: CLI options (`--keystore`, `--alias`, `--ks-pass`, `--key-pass`) for production signing.
-- [ ] **Incremental Compilation Engine**: Hashing system to cache resource compilation and Java bytecode, rebuilding only modified sources.
+- [x] **Incremental Compilation Engine**: Hashing system to cache resource compilation and Java bytecode, rebuilding only modified sources.
 - [ ] **Zipalign Optimization Engine**: Native 4-byte boundary alignment for uncompressed zip entries prior to signature verification.
 - [ ] **Kotlin Compiler Support**: Integration of `kotlinc` targeting Dalvik/ART bytecode for `.kt` source files.
 - [ ] **AAR & Remote Dependency Resolution**: Parsing `.aar` archives and automated transitive Maven package resolution.

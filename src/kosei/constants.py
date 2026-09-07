@@ -9,3 +9,7 @@ TEMPLATES = BASE / "templates"
 _vm1 = "/system/bin/dalvikvm"
 _vm2 = "/apex/com.android.art/bin/dalvikvm"
 DALVIK_VM = _vm1 if Path(_vm1).exists() else _vm2
+
+BUFFER_SIZE = 64 * 1024
+
+

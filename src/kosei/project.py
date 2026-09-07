@@ -1,6 +1,10 @@
 import shutil
+import json
+import hashlib
 from xml.etree import ElementTree
 from pathlib import Path
+
+from kosei.constants import BUFFER_SIZE
 
 
 class Project:
@@ -11,7 +15,9 @@ class Project:
 		self._strings_root = ElementTree.parse(self.res / "values" / "strings.xml").getroot()
 		self._manifest_root = ElementTree.parse(self.manifest).getroot()
 		self._android_ns = "{http://schemas.android.com/apk/res/android}"
-  
+		
+		self._cache = json.loads(self._cache_file.read_text()) if self._cache_file.exists() else {}
+		
 		self._init_app()
 	
 	def _init_app(self):
@@ -36,6 +42,8 @@ class Project:
 		self.bin = self.build / "bin"
 		self.compiled = self.build / "compiled"
 		
+		self._cache_file = self.build / "cache.json"
+		
 		self.manifest = self.path / "AndroidManifest.xml"
 		self.res = self.path / "res"
 		self.src = self.path / "src"
@@ -59,3 +67,19 @@ class Project:
 		print(f"[*] Cleaned build directory '{self.build}'")
 		return True
 		
+	def _get_hash(self, path: Path) -> str:
+		digest = hashlib.sha256()
+		with path.open("rb") as f:
+			while chunk := f.read(BUFFER_SIZE):
+				digest.update(chunk)
+		return digest.hexdigest()
+	
+	def filter_modified(self, paths: list) -> list:
+		return [p for p in paths if p.is_file() and self._cache.get(str(p)) != self._get_hash(p)]
+
+	def update_cache(self, paths: list) -> None:
+		for p in paths:
+			if p.is_file():
+				self._cache[str(p)] = self._get_hash(p)
+		self._cache_file.write_text(json.dumps(self._cache))
+
