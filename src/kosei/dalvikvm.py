@@ -2,7 +2,7 @@ import os
 import subprocess
 
 from kosei.project import Project
-from kosei.constants import DATA, DALVIK_VM
+from kosei.constants import TOOLCHAIN, DALVIK_VM
 
 
 def compile_java(project: Project) -> bool:
@@ -19,7 +19,7 @@ def compile_java(project: Project) -> bool:
 	print("[*] compiling java")
 	
 	classpath = [
-		DATA / "android.classes.jar",
+		TOOLCHAIN / "android.classes.jar",
 		project.generated,
 		*project.libs
 	]
@@ -28,7 +28,7 @@ def compile_java(project: Project) -> bool:
 		DALVIK_VM,
 		f"-Djava.io.tmpdir={project.temp}",
 		"-Xmx256m",
-		"-cp", DATA / "ecj.jar",
+		"-cp", TOOLCHAIN / "ecj.jar",
 		"org.eclipse.jdt.internal.compiler.batch.Main",
 		"-proc:none",
 		"-16",
@@ -60,9 +60,9 @@ def compile_classes(project: Project) -> bool:
 	res = subprocess.run([
 		DALVIK_VM,
 		"-Xmx256m",
-		"-cp", DATA / "d8.dex",
+		"-cp", TOOLCHAIN / "d8.dex",
 		"com.android.tools.r8.D8",
-		"--lib", DATA / "android.jar",
+		"--lib", TOOLCHAIN / "android.jar",
 		"--min-api", str(project.min_api),
 		"--output", project.bin,
 		*classes,
@@ -83,11 +83,11 @@ def sign_apk(project: Project) -> bool:
 	
 	res = subprocess.run([
 		DALVIK_VM,
-		"-cp", DATA / "apksigner.dex",
+		"-cp", TOOLCHAIN / "apksigner.dex",
 		"com.android.apksigner.ApkSignerTool",
 		"sign",
-		"--key", DATA / "debug.pk8",
-		"--cert", DATA / "debug.x509.pem",
+		"--key", TOOLCHAIN / "debug.pk8",
+		"--cert", TOOLCHAIN / "debug.x509.pem",
 		"--v1-signing-enabled", "true",
 		"--v2-signing-enabled", "true",
 		"--v3-signing-enabled", "true",

@@ -2,7 +2,7 @@ import subprocess
 import zipfile
 
 from kosei.project import Project
-from kosei.constants import DATA
+from kosei.constants import TOOLCHAIN
 
 
 def compile_resources(project: Project) -> bool:
@@ -37,7 +37,7 @@ def link_resources(project: Project) -> bool:
 	args = [
 		"aapt2",
 		"link",
-		"-I", DATA / "android.jar",
+		"-I", TOOLCHAIN / "android.jar",
 		"--manifest", project.manifest,
 		"--java", project.generated,
 		"-o", project.apk,

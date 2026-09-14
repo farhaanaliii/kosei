@@ -5,6 +5,7 @@ from .project import Project
 from .generator import create_project
 from . import aapt
 from . import dalvikvm
+from . import setup
 
 
 def main() -> None:
@@ -28,6 +29,9 @@ def main() -> None:
     clean = subparsers.add_parser("clean", help="Clean build artifacts for a project")
     clean.add_argument("project", nargs="?", type=Path, default=Path("."), help="Project directory (default: current directory)")
 
+    setup_parser = subparsers.add_parser("setup", help="Download and set up toolchain dependencies")
+    setup_parser.add_argument("-f", "--force", action="store_true", help="Force redownload all dependencies")
+
     args = parser.parse_args()
     
     if args.command == "new":
@@ -38,7 +42,12 @@ def main() -> None:
         project_path = args.project.resolve()
         project = Project(project_path)
         project.clean()
+    elif args.command == "setup":
+        setup.setup_toolchain(force=args.force)
     elif args.command == "build":
+        if not setup.ensure_dependencies():
+            return
+
         project_path = args.project.resolve()
         project = Project(project_path)
         print(f"[*] building '{project.app_name}'")

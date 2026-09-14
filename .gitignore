@@ -10,9 +10,7 @@ wheels/
 .venv
 
 # Android ART runtime AOT compilation output
-src/data/oat/
+src/data/
 oat/
 *.flock
-
-Test
 

@@ -25,8 +25,7 @@ apksigner.dex     ->  sign the .apk with debug.pk8 and debug.x509.pem
 
 - Python >= 3.7
 - Termux with `aapt2` in `$PATH`
-- ART at `/apex/com.android.art/bin/dalvikvm` or `/system/bin/dalvikvm`
-- Bundled runtime binaries in `src/data/`
+- Runtime toolchain in `~/.kosei/toolchain/` (installed via `kosei setup`)
 
 ## Installation
 
@@ -35,6 +34,7 @@ Create a virtual environment and install in editable mode using `uv`:
 ```bash
 uv venv
 uv pip install -e .
+kosei setup
 ```
 
 ## Usage
@@ -69,9 +69,22 @@ Clean build artifacts:
 kosei clean ./projects/Hello
 ```
 
+Download or repair runtime toolchain:
+
+```bash
+kosei setup
+```
+
+Force re-download complete toolchain:
+
+```bash
+kosei setup -f
+```
+
 Alternative Python module execution:
 
 ```bash
+python -m kosei setup
 python -m kosei new Hello
 python -m kosei build
 ```
@@ -80,9 +93,9 @@ Build Outputs:
 - `build/[AppName].apk` — Unsigned intermediate package inside the project build directory
 - `[AppName].apk` — v1/v2/v3 signed APK ready for installation
 
-## data Directory
+## Toolchain Binaries
 
-All runtime binaries live under `src/data/` and execute natively on Android's `dalvikvm` engine.
+All runtime binaries execute natively on Android's `dalvikvm` engine and are managed via `kosei setup` from [kosei-toolchain](https://github.com/farhaanaliii/kosei-toolchain).
 
 | File | Description | Purpose |
 |---|---|---|
