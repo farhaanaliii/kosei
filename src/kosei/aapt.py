@@ -80,5 +80,26 @@ def append_classes_and_libs(project: Project) -> bool:
 		return False
 
 
+def align_apk(project: Project) -> bool:
+	print("[*] aligning apk")
+	
+	res = subprocess.run([
+		"zipalign",
+		"-p",
+		"-f",
+		"4",
+		project.apk,
+		project.aligned_apk
+	], capture_output=True, text=True)
+	
+	if res.returncode == 0:
+		return True
+	else:
+		print("[*] apk alignment failed!")
+		print(res.stderr)
+		return False
+
+
+
 	
 

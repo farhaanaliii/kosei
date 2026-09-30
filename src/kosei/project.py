@@ -29,6 +29,7 @@ class Project:
 		
 		version_name = self._manifest_root.get(f"{self._android_ns}versionName")
 		self.apk = self.build / f"{self.app_name}_unsigned.apk"
+		self.aligned_apk = self.build / f"{self.app_name}_aligned.apk"
 		self.signed_apk = self.path / f"{self.app_name}_v{version_name}.apk"
 	
 	def get_string(self, name: str) -> str:

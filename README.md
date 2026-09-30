@@ -18,13 +18,14 @@ aapt2 link        ->  link .flat + AndroidManifest.xml -> .apk + R.java
 ecj.jar (3.27.0)  ->  compile .java + R.java -> .class files (Java 16)
 d8.dex            ->  desugar and convert .class -> classes.dex
 zipfile           ->  inject classes.dex into the .apk
+zipalign          ->  align uncompressed zip entries (4B / 16KB page alignment)
 apksigner.dex     ->  sign the .apk with debug.pk8 and debug.x509.pem
 ```
 
 ## Requirements
 
 - Python >= 3.7
-- Termux with `aapt2` in `$PATH`
+- Termux with `aapt2` and `zipalign` in `$PATH` (`pkg install aapt2 aapt`)
 - Runtime toolchain in `~/.kosei/toolchain/` (installed via `kosei setup`)
 
 ## Installation
@@ -115,7 +116,7 @@ All runtime binaries execute natively on Android's `dalvikvm` engine and are man
 - [x] **Automatic Multidex Support**: DEX splitting and secondary dex injection for large codebases exceeding 64k method limits.
 - [ ] **Custom Release Keystore Profiles**: CLI options (`--keystore`, `--alias`, `--ks-pass`, `--key-pass`) for production signing.
 - [x] **Incremental Compilation Engine**: Hashing system to cache resource compilation and Java bytecode, rebuilding only modified sources.
-- [ ] **Zipalign Optimization Engine**: Native 4-byte boundary alignment for uncompressed zip entries prior to signature verification.
+- [x] **Zipalign Optimization Engine**: Native 4-byte and 16-byte memory page boundary alignment for uncompressed zip entries prior to signature verification.
 - [ ] **Kotlin Compiler Support**: Integration of `kotlinc` targeting Dalvik/ART bytecode for `.kt` source files.
 - [ ] **AAR & Remote Dependency Resolution**: Parsing `.aar` archives and automated transitive Maven package resolution.
 - [ ] **Automated ADB Deployment**: Device deployment via `--install` and `--launch` options using local ADB service.

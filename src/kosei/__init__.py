@@ -62,6 +62,8 @@ def main() -> None:
             return
         if not aapt.append_classes_and_libs(project):
             return
+        if not aapt.align_apk(project):
+            return
         if not dalvikvm.sign_apk(project):
             return
         print(f"[*] built '{project.app_name}' -> {project.signed_apk.name}")
