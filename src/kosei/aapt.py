@@ -59,7 +59,7 @@ def link_resources(project: Project) -> bool:
 
 
 def append_classes_and_libs(project: Project) -> bool:
-	libs = list(project.native_libs.rglob("*.so"))
+	libs = list(project.native_libs.rglob("*.so")) if project.native_libs.exists() else []
 	dex_files = sorted(project.bin.glob("classes*.dex"))
 	
 	try:
@@ -71,7 +71,7 @@ def append_classes_and_libs(project: Project) -> bool:
 			if libs:
 				print("[*] appending native libs")
 				for lib in libs:
-					apk.write(lib, lib.relative_to(project.path).as_posix())
+					apk.write(lib, f"lib/{lib.relative_to(project.native_libs).as_posix()}")
 		
 		return True
 	except Exception as e:

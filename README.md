@@ -111,7 +111,7 @@ All runtime binaries execute natively on Android's `dalvikvm` engine and are man
 
 - [x] **Native ART Engine Execution**: Execute compilation toolchain (`ecj`, `d8`, `apksigner`) natively on Dalvik VM without host JDK dependencies.
 - [x] **Java 16 & Google D8 Support**: Modernized compilation pipeline with ECJ 3.27.0 and Google D8 dexer replacing legacy dx.
-- [x] **Jar & Native Binary Bundling**: Automated linking for 3rd-party `.jar` files in `libs/` and `.so` binaries in `lib/`.
+- [x] **Jar & Native Binary Bundling**: Automated linking for 3rd-party `.jar` files in `app/libs/` and `.so` binaries in `app/src/main/jniLibs/`.
 - [x] **Automatic Multidex Support**: DEX splitting and secondary dex injection for large codebases exceeding 64k method limits.
 - [ ] **Custom Release Keystore Profiles**: CLI options (`--keystore`, `--alias`, `--ks-pass`, `--key-pass`) for production signing.
 - [x] **Incremental Compilation Engine**: Hashing system to cache resource compilation and Java bytecode, rebuilding only modified sources.

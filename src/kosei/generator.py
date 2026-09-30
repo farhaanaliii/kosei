@@ -10,7 +10,7 @@ def replace_placeholder(file_path: Path, placeholder: str, content: str):
     file_path.write_text(text, encoding="utf-8")
 
 
-def create_project(app_name: str, package_name: str=None, path: Path=None) -> bool:
+def create_project(app_name: str, package_name: str | None = None, path: Path | None = None) -> bool:
     path = path or Path(".")
     
     if package_name is None:
@@ -26,15 +26,14 @@ def create_project(app_name: str, package_name: str=None, path: Path=None) -> bo
 
     shutil.copytree(TEMPLATES / "default", project_folder)
 
-    packge_dir = project_folder / "src" / "package"
-    target_dir = project_folder / "src" / Path(*package_name.split("."))
+    main_dir = project_folder / "app" / "src" / "main"
+    package_dir = main_dir / "java" / "package"
+    target_dir = main_dir / "java" / Path(*package_name.split("."))
     target_dir.parent.mkdir(parents=True, exist_ok=True)
-    shutil.move(packge_dir, target_dir)    
+    shutil.move(package_dir, target_dir)    
     
-    replace_placeholder(project_folder / "AndroidManifest.xml", "{package_name}", package_name)
-    replace_placeholder(project_folder / "res" / "values" / "strings.xml", "{app_name}", app_name)
-    replace_placeholder(target_dir / "Applications.java", "{package_name}", package_name)
-    replace_placeholder(target_dir / "CrashActivity.java", "{package_name}", package_name)
+    replace_placeholder(main_dir / "AndroidManifest.xml", "{package_name}", package_name)
+    replace_placeholder(main_dir / "res" / "values" / "strings.xml", "{app_name}", app_name)
     replace_placeholder(target_dir / "MainActivity.java", "{package_name}", package_name)
     
     print(f"[*] App project '{app_name}' created!")

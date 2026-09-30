@@ -44,19 +44,19 @@ class Project:
 		
 		self._cache_file = self.build / "cache.json"
 		
-		self.manifest = self.path / "AndroidManifest.xml"
-		self.res = self.path / "res"
-		self.src = self.path / "src"
-		self.assets = self.path / "assets"
-		self.native_libs = self.path / "lib"
-		
+		main_dir = self.path / "app" / "src" / "main"
+		self.manifest = main_dir / "AndroidManifest.xml"
+		self.res = main_dir / "res"
+		self.src = main_dir / "java"
+		self.assets = main_dir / "assets"
+		self.native_libs = main_dir / "jniLibs"
 		
 		for path in (self.build, self.temp, self.generated, self.bin, self.compiled):
 			path.mkdir(exist_ok=True)
 	
 	@property
 	def libs(self) -> list:
-		return list((self.path / "libs").glob("*.jar"))
+		return list((self.path / "app" / "libs").glob("*.jar"))
 	
 	def clean(self) -> bool:
 		if not self.build.exists():
