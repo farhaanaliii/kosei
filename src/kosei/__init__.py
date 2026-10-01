@@ -32,6 +32,16 @@ def main() -> None:
     setup_parser = subparsers.add_parser("setup", help="Download and set up toolchain dependencies")
     setup_parser.add_argument("-f", "--force", action="store_true", help="Force redownload all dependencies")
 
+    original_format_help = parser.format_help
+
+    def format_all_help() -> str:
+        parts = [original_format_help()]
+        for sub in dict.fromkeys(subparsers.choices.values()):
+            parts.append(sub.format_help())
+        return "\n".join(parts)
+
+    parser.format_help = format_all_help
+
     args = parser.parse_args()
     
     if args.command == "new":
